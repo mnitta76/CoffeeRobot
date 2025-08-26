@@ -1,0 +1,374 @@
+@charset "utf-8";
+
+/* base */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body.sidebar-open {
+    overflow: hidden;
+}
+
+main {
+
+}
+
+.welcome {
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+    background-color: #eee;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background: #343a40;
+    color: white;
+    transition: left 0.3s;
+    z-index: 1050;
+    padding-top: 60px;
+}
+
+#sidebar.active {
+    left: 0;
+}
+
+#sidebar .sidebar-item {
+    padding: 10px 20px;
+}
+
+#sidebar .sidebar-item:hover {
+    background-color: #495057;
+}
+
+#sidebarToggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    outline: none;
+    box-shadow: none;
+    text-decoration: none;
+}
+
+#sidebarToggle:focus,
+#sidebarToggle:hover {
+    outline: none;
+    box-shadow: none;
+    text-decoration: none;
+}
+
+#sidebarClose {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: white;
+}
+
+#sidebarClose:hover {
+    color: #ffdd57;
+}
+
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1049; /* sidebar (1050) より下 */
+}
+
+#overlay.active {
+     display: block;
+}
+
+.navbar-brand {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.6rem;         /* 少し大きめにして存在感 */
+    font-weight: 600;          /* 太字寄りでしっかり表示 */
+    letter-spacing: 0.05em;    /* 文字の間隔をやや広めに */
+    color: #ffffff !important; /* 白色を明示 */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* ほんのり影で視認性UP */
+    transition: color 0.3s;
+}
+
+.navbar-brand:hover {
+    color: #ffdd57 !important; /* ホバー時に黄色系へ変化（アクセント） */
+}
+
+/* chat */
+/* チャット画面を縦に構成 */
+.chat-app {
+  display: flex;
+  flex-direction: column;
+}
+
+/* メイン部分が伸縮して対応 */
+.chat-main-container {
+  height: 88vh;
+}
+
+.chat-content {
+    display: block;
+    height: 88vh; /* 画面高に応じて親の高さを調整 */
+}
+
+.responseTitleArea {
+    display: flex;
+    flex-wrap: nowrap;          /* 折り返さないようにする（必要なら wrap に変更） */
+    align-items: center;
+    gap: 0.5rem;                 /* 要素間の余白 */
+    flex-direction: row;
+    overflow-x: auto;
+ }
+
+.responseTitleAreaChild {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    border-bottom: 1px solid gray;
+    margin-right: 5px;
+    flex-shrink: 1;             /* はみ出す時は縮む（必要なら） */
+    white-space: nowrap;
+}
+
+.responseTitleAreaChild::after {
+    position: absolute;
+    right: 15px;
+    width: 10px;
+    height: 7px;
+    background-color: #535353;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    content: '';
+    pointer-events: none;
+}
+
+.responseTitleAreaChild select {
+    appearance: none;
+    height: 2.8em;
+    padding: .4em calc(.8em + 30px) .4em .8em;
+    border: none;
+    border-bottom: 2px solid #ffffff;
+    background-color: #fff;
+    color: #333333;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.responseTitleAreaChild select:focus {
+    outline: none;
+}
+
+/* スクロールエリア（会話表示エリア） */
+.responsearea {
+  height: 70%;
+  box-sizing: border-box;  /* padding込みのサイズ計算 */
+}
+
+.responsearea .responseText {
+  color:black;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight:500;
+  font-size: 16px;
+  border-radius: 5px;
+  line-height: 22px;
+  background-color: transparent;
+  transition: all 0.3s;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  width: 95%;
+  box-sizing: border-box;
+  outline:0;
+  display: block;
+  overflow: auto;
+  padding: 0 5% 0 0;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.message {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.message.user {
+  flex-direction: row-reverse;
+  background: none; /* 背景はspanの方に持たせる */
+}
+
+.message.assistant {
+  color: #222;
+}
+
+.message-text {
+  display: inline-block;
+  padding: 0.5em 1em;
+  border-radius: 20px;
+  max-width: 85%;
+  word-break: break-word;
+  white-space: pre-line;
+}
+.message.user .message-text {
+  background: lightgray; /* 背景はspanの方に持たせる */
+}
+
+/* 入力フォームを画面下に固定 */
+.searchform {
+  margin-top: auto;
+}
+
+.searchform textarea {
+  flex: 1; /* 可変幅にする */
+  min-width: 0; /* flexbox で要素を収めるために必要 */
+  color: black;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  border-radius: 5px;
+  line-height: normal;
+  background-color: transparent;
+  border: 2px solid gray;
+  transition: all 0.3s;
+  padding: 0.5em 1em;
+  box-sizing: border-box;
+  outline: 0;
+  height: 25%;
+}
+
+.searchform button {
+  padding: 1em;
+  height: 50px; /* 高さを統一 */
+}
+
+.searchform #submitButton {
+}
+
+.searchform #clearButton {
+  background-color: gray;
+  color: white;
+}
+
+.searchform button:hover {
+  color: #1A60BF;
+  background-color: #D0E2FB;
+}
+
+.searchform .form-control.is-valid {
+    box-shadow: none !important;
+    border-color: gray !important;
+    background-image: none !important;
+}
+
+.custom-wrapper {
+    margin-bottom: 0 !important;
+}
+
+@media (min-width: 768px) {
+  #submitButton,
+  #clearButton {
+    min-width: 90px;  /* ここを好みに応じて調整可能 */
+  }
+}
+
+@media (max-width: 768px) {
+/* base */
+    main {
+
+    }
+
+    .welcome {
+        padding: 2rem 1rem; /* 左右の余白を追加しつつ、上下は少し縮める */
+        margin-bottom: 1.5rem;
+        text-align: center; /* 中央寄せ */
+    }
+
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    #sidebar {
+        width: 80%; /* デフォルト250pxより画面幅に合わせる */
+        left: -80%;
+        padding-top: 4rem;
+    }
+
+    #sidebar.active {
+        left: 0;
+    }
+
+    #sidebarToggle {
+        font-size: 1.8rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    #sidebarClose {
+        font-size: 1.8rem;
+        padding: 0.5rem;
+    }
+
+    #sidebar .sidebar-item {
+        font-size: 1.1rem;
+        padding: 14px 24px; /* タップしやすく */
+    }
+
+    .navbar-brand {
+        font-size: 1.3rem;
+        letter-spacing: 0.03em;
+        text-align: center;
+    }
+
+    .navbar-nav .nav-link,
+    .navbar-nav button.nav-link {
+        font-size: 0.95rem;
+        padding: 0.4rem 0.6rem;
+    }
+
+/* chat */
+
+    .responseTitleAreaChild {
+        font-size: small;: 60%;
+    }
+
+    .responseTitleAreaChildBtn {
+        font-size: small;: 60%;
+    }
+
+    .responsearea {
+        height: 60%;
+    }
+
+    .searchform {
+        top: 60%;
+        flex-direction: column; /* スマホ時は縦並び */
+        align-items: stretch; /* フル幅にする */
+    }
+
+    .searchform textarea {
+        width: 100%; /* スマホ時は幅を100%に */
+    }
+
+    .searchform button {
+        width: 100%; /* ボタンもフル幅 */
+    }
+    .searchform .row {
+        flex-direction: column; /* モバイルでは縦並び */
+        align-items: stretch; /* 各要素の幅を揃える */
+    }
+
+}

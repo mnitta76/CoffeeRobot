@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% load static %}
+{% load django_bootstrap5 %}
+
+    {% block extraheader %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% endblock %}
+
+{% block main %}
+<div class="chat-app mt-3">
+    <main class="main chat-main-container">
+        <div class="col-md-9 col-12 mx-auto">
+            <form method="POST" id="chat-form">
+                {% csrf_token %}
+                <div class="chat-content">
+                    <div class="responseTitleArea">
+                        <label id="responseTitle" class="responseTitleAreaChild mb-3 flex-md-row ">
+                            {{ form.model_choice }}
+                        </label>
+                        <label id="responseMode" class="responseTitleAreaChild mb-3 flex-md-row ">
+                            {{ form.response_mode }}
+                        </label>
+                        <!-- 実際のファイル選択 input -->
+                        <input type="file" id="pdfInput" accept="application/pdf" style="display: none;" />
+                        <button id="uploadPdfButton" type="button" class="responseTitleAreaChildBtn btn btn-primary" {% if pdf_file_name != "" %}style="display: none;"{% endif %}>PDFアップロード</button>
+
+                        <label id="pdfFileName" class="mb-3 flex-md-row" {% if pdf_file_name == "" %}style="display: none;"{% endif %}>
+                            参照PDF：<span id="pdfFileNameText">{{ pdf_file_name }}</span>
+                        </label>
+                    </div>
+
+                    {% csrf_token %}
+                    <div class="responsearea mb-3">
+                        <ul id="responseText" class="responseText">
+                            {% for msg in messages %}
+                                <li class="message {{ msg.role }}">
+                                    <span class="message-text">{{ msg.content }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="searchform">
+                        <div class="row g-2 align-items-center">
+                            <div class="col-12 col-md">
+                                {% bootstrap_field form.message show_label=False wrapper_class="custom-wrapper" %}
+                            </div>
+
+                            <div class="col-12 col-md-auto d-flex justify-content-between gap-2">
+                                <button id="submitButton" type="submit" class="btn btn-primary">送信</button>
+                                <button id="clearButton" type="button" class="btn btn-secondary">クリア</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </main>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const responseBox = document.getElementById("responseText");
+        setTimeout(() => {
+            responseBox.scrollTo({ top: responseBox.scrollHeight, behavior: 'smooth' });
+        }, 100);  // 100ms 後にスクロール
+
+        // モード変更処理
+        document.getElementById("id_response_mode").addEventListener("change", async function () {
+            // セレクトボックスから現在のmodel_choiceを取得
+            const modelSelect = document.querySelector('select[name="model_choice"]');
+            const currentModel = modelSelect ? modelSelect.value : "chroma";
+            // セレクトボックスから現在のresponse_modeを取得
+            const responseModeSelect = document.querySelector('select[name="response_mode"]');
+            const currentMode = responseModeSelect ? responseModeSelect.value : "chroma";
+            // PDFアップロード情報取得
+            const pdfFileNameText = document.getElementById("pdfFileNameText");
+            const uploadButton = document.getElementById("uploadPdfButton");
+            try {
+                const response = await fetch("/chat/change_mode/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCSRFToken(),
+                    },
+                    body: JSON.stringify({ response_mode: currentMode,  model_choice: currentModel})
+                });
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // レスポンスデータで表示を更新する
+                    const responseBox = document.getElementById("responseText");
+                    responseBox.innerHTML = "";  // いったんクリア
+
+                    data.messages.forEach((msg) => {
+                        const li = document.createElement("li");
+                        li.classList.add("message", msg.role);
+                        li.innerHTML = `<span class="message-text">${msg.content}</span>`;
+                        responseBox.appendChild(li);
+                    });
+
+                    if(data.file_name === "") {
+                        document.getElementById("pdfFileName").style.display = "none";
+                        document.getElementById("uploadPdfButton").style.display = "block";
+                    } else {
+                        document.getElementById("pdfFileName").style.display = "block";
+                        document.getElementById("uploadPdfButton").style.display = "none";
+                        pdfFileNameText.textContent = data.file_name;
+                    }
+                    // スムーズに最下部へスクロール
+                    responseBox.scrollTo({ top: responseBox.scrollHeight, behavior: 'smooth' });
+
+                } else {
+                    alert("データの取得に失敗しました");
+                }
+
+            } catch (error) {
+                alert("エラーが発生しました: " + error);
+            }
+        });
+
+        // 履歴削除処理
+        document.getElementById("clearButton").addEventListener("click", async function () {
+            const confirmed = confirm("会話履歴をすべて削除します。よろしいですか？");
+            if (!confirmed) return;
+
+            // セレクトボックスから現在のresponse_modeを取得
+            const responseModeSelect = document.querySelector('select[name="response_mode"]');
+            const currentMode = responseModeSelect ? responseModeSelect.value : "chroma";
+
+            try {
+                const response = await fetch("/chat/clear/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCSRFToken(),
+                    },
+                    body: JSON.stringify({ response_mode: currentMode })  // ← modeを送信
+                });
+
+                const result = await response.json();
+                if (result.status === "cleared") {
+                    responseBox.innerHTML = "";
+                    document.querySelector('textarea[name="message"]').value = "";
+                    document.getElementById("pdfFileName").style.display = "none";
+                    document.getElementById("uploadPdfButton").style.display = "block";
+                } else {
+                    alert("履歴の削除に失敗しました");
+                }
+            } catch (error) {
+                alert("エラーが発生しました: " + error);
+            }
+        });
+
+        // PDF選択ダイアログ処理
+        const pdfInput = document.getElementById("pdfInput");
+        const uploadButton = document.getElementById("uploadPdfButton");
+        const pdfFileNameText = document.getElementById("pdfFileNameText");
+
+        if (uploadButton) {
+            uploadButton.addEventListener("click", () => pdfInput.click());
+        }
+        if (pdfInput) {
+            pdfInput.addEventListener("change", async () => {
+                if (pdfInput.files.length === 0) return;
+
+                // セレクトボックスから現在のresponse_modeを取得
+                const responseModeSelect = document.querySelector('select[name="response_mode"]');
+                const currentMode = responseModeSelect ? responseModeSelect.value : "free";
+
+                const file = pdfInput.files[0];
+
+                const formData = new FormData();
+                formData.append("pdf", file);
+                formData.append("response_mode", currentMode);
+
+                try {
+                  const response = await fetch("/chat/set_retriever/", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-CSRFToken": getCSRFToken(),
+                    },
+                  });
+
+                  const result = await response.json();
+                  document.getElementById("pdfFileName").style.display = "block";
+                  document.getElementById("uploadPdfButton").style.display = "none";
+                  if(pdfFileNameText) {
+                      pdfFileNameText.textContent = result.file_name;
+                  }
+                } catch (err) {
+                  console.error("アップロードエラー:", err);
+                }
+            });
+        }
+
+        function getCSRFToken() {
+        const cookieValue = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("csrftoken="))
+          ?.split("=")[1];
+        return cookieValue || "";
+        }
+
+        // チャット部分だけを更新してスクロール
+        const chatForm = document.getElementById("chat-form");
+        chatForm.addEventListener("submit", async function (event) {
+            event.preventDefault(); // ページリロードを防ぐ
+
+            const formData = new FormData(chatForm);
+
+            try {
+                const response = await fetch("/chat/", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-CSRFToken": getCSRFToken()
+                    },
+                });
+
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+
+                // #responseTextを更新
+                const newResponseBox = doc.getElementById("responseText");
+                if (newResponseBox) {
+                    responseBox.innerHTML = newResponseBox.innerHTML;
+
+                    // スクロールを一番下へ
+                    responseBox.scrollTo({ top: responseBox.scrollHeight, behavior: 'smooth' });
+                }
+
+                // メッセージ入力欄を空に
+                const messageInput = chatForm.querySelector('textarea[name="message"]');
+                if (messageInput) messageInput.value = "";
+
+            } catch (err) {
+                alert("送信エラー: " + err);
+            }
+        });
+    });
+
+</script>
+{% endblock %}

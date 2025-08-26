@@ -1,0 +1,129 @@
+{% load static %}
+{% load django_bootstrap5 %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COFFEE ROBOT</title>
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+</head>
+<body>
+
+<!-- サイドバー -->
+<div id="sidebar">
+    <button id="sidebarClose" class="btn btn-link text-white position-absolute top-0 end-0 m-2" style="font-size:1.2rem;">&times;</button>
+{#    <div class="sidebar-item"><a href="/dashboard/" class="text-white text-decoration-none">📋 ダッシュボード</a></div>#}
+{#    <div class="sidebar-item"><a href="/coffee/" class="text-white text-decoration-none">☕ コーヒーノート</a></div>#}
+{#    <div class="sidebar-item"><a href="/analytics/" class="text-white text-decoration-none">📊 アナリティクス</a></div>#}
+    <div class="sidebar-item"><a href="/chat/" class="text-white text-decoration-none">🧠 AIチャット</a></div>
+{#    <div class="sidebar-item"><a href="/tools/" class="text-white text-decoration-none">🧰 ツール</a></div>#}
+{#    <div class="sidebar-item"><a href="/settings/" class="text-white text-decoration-none">⚙️ 設定</a></div>#}
+
+    {% if user.is_authenticated %}
+        <div class="sidebar-item">
+            <form method="post" action="{% url 'logout' %}">{% csrf_token %}
+                <button class="btn btn-link text-white p-0 text-decoration-none">🚪 ログアウト</button>
+            </form>
+        </div>
+    {% else %}
+        <div class="sidebar-item"><a href="{% url 'login' %}" class="text-white text-decoration-none">🔐 ログイン</a></div>
+        <div class="sidebar-item"><a href="{% url 'signup' %}" class="text-white text-decoration-none">📝 会員登録</a></div>
+    {% endif %}
+</div>
+
+<div id="overlay"></div>
+
+<!-- ヘッダー -->
+<nav class="navbar navbar-expand navbar-dark bg-dark position-relative">
+    <div class="container">
+        <!-- 左側: ハンバーガーメニュー -->
+        {% if user.is_authenticated %}
+        <button id="sidebarToggle" class="btn btn-link text-white position-absolute start-0">&#9776;</button>
+        {% endif %}
+
+        <!-- 中央: ブランド名をセンター -->
+        <div class="mx-auto position-absolute start-50 translate-middle-x">
+            <a href="/" class="navbar-brand text-center">COFFEE ROBOT</a>
+        </div>
+
+        <!-- 右側: ログイン・ログアウト -->
+        <ul class="navbar-nav ms-auto">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="nav-link btn btn-link" type="submit">ログアウト</button>
+                </form>
+            </li>
+            {% else %}
+            <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">ログイン</a></li>
+            <li class="nav-item"><a href="{% url 'signup' %}" class="nav-link">会員登録</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<!-- メイン -->
+<main>
+    <div class="container mt-4">
+        {% block main %}{% endblock %}
+    </div>
+</main>
+
+<!-- JS: サイドバー開閉 -->
+<script>
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("overlay");
+    const toggleBtn = document.getElementById("sidebarToggle");
+    const closeBtn = document.getElementById("sidebarClose");
+    const body = document.body;
+
+    function getScrollbarWidth() {
+        return window.innerWidth - document.documentElement.clientWidth;
+    }
+
+    function openSidebar() {
+        sidebar.classList.add("active");
+        overlay.classList.add("active");
+
+        if (window.innerWidth <= 768) {
+            const scrollbarWidth = getScrollbarWidth();
+            body.style.paddingRight = `${scrollbarWidth}px`;
+            body.classList.add("sidebar-open");
+        }
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+
+        body.classList.remove("sidebar-open");
+        body.style.paddingRight = "";
+    }
+
+    // ✅ 要素が存在するときだけイベントを追加する
+    if (toggleBtn) {
+        toggleBtn.addEventListener("click", openSidebar);
+    }
+    if (closeBtn) {
+        closeBtn.addEventListener("click", closeSidebar);
+    }
+    if (overlay) {
+        overlay.addEventListener("click", closeSidebar);
+    }
+
+    // Escキーは常に反応OK
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+            closeSidebar();
+        }
+    });
+
+</script>
+
+</body>
+</html>

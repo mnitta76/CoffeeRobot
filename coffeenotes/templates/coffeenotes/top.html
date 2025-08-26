@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="welcome">
+    <h1 class="title">ようこそCoffeeNoteへ！</h1>
+    <p class="subtitle">Coffeeの記録をつけましょう</p>
+    <a class="btn btn-primary" href="{% url 'coffeenote_new' %}">CoffeeNoteを作成する</a>
+</div>
+
+{% if coffeenotes %}
+<table class="table">
+    <thead>
+    <tr>
+        <th>作成者</th>
+        <th>作成日</th>
+        <th>豆 / 店名</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for coffeenote in coffeenotes %}
+    <tr>
+        <th>{{ coffeenote.created_by.username }}</th>
+        <th>{{ coffeenote.created_at }}</th>
+        <th>{{ coffeenote.bean }} / {{ coffeenote.shop.name }}</th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>CoffeeNoteはまだ投稿されていません。</p>
+{% endif %}
+{% endblock %}
