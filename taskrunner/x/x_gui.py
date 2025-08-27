@@ -1,11 +1,8 @@
-import environ
-import sys
-
-from pathlib import Path
 import pyautogui as pag
 from time import sleep
-import subprocess
+import platform
 import pyperclip
+import subprocess
 import urllib.parse
 from datetime import datetime
 
@@ -85,10 +82,20 @@ class XGui:
         return_code = 0 # 0の場合は正常終了　1の場合は異常終了
 
         try:
+            system = platform.system()
+
             ## Chromeを起動する
             chrome_path = self.chrome_path
-            process = subprocess.Popen(['start', chrome_path], shell=True) # Windowsの場合
-            #process = subprocess.Popen([r"google-chrome --simulate-outdated-no-au='Tue, 31 Dec 2099 23:59:59 GMT'"], shell=True) # linuxの場合
+            if system == "Windows":
+                process = subprocess.Popen(['start', chrome_path], shell=True) # Windowsの場合
+                #process = subprocess.Popen([r"google-chrome --simulate-outdated-no-au='Tue, 31 Dec 2099 23:59:59 GMT'"], shell=True) # linuxの場合
+            elif system == "Linux":
+                # Linux環境：google-chrome コマンドで起動
+                subprocess.Popen([
+                    "google-chrome",
+                    "--simulate-outdated-no-au=Tue, 31 Dec 2099 23:59:59 GMT"
+                ], shell=True)
+
             sleep(self.wait_time)
             is_opend_chrome = True
 
