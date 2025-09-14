@@ -115,7 +115,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # `STATICFILES_DIRS` は開発環境用
 # 本番環境 (DEBUG=False) では不要なので、環境変数を利用して切り替える
@@ -125,8 +125,10 @@ else:
     STATICFILES_DIRS = []
 
 # `STATIC_ROOT` は本番環境用
-STATIC_ROOT = env.str('STATIC_ROOT', f'/var/www/{BASE_DIR.name}/static')
-
+# Linux要
+# STATIC_ROOT = env.str('STATIC_ROOT', f'/var/www/{BASE_DIR.name}/static')
+# Windows要
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
