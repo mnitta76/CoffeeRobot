@@ -1,3 +1,4 @@
+import os
 import pyautogui as pag
 from time import sleep
 import platform
@@ -8,7 +9,8 @@ from datetime import datetime
 
 from django.apps import apps
 
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # taskrunner/ まで
+IMG_DIR = os.path.join(BASE_DIR, 'img', 'x_gui')
 
 class XGui:
     ## 共通定数
@@ -25,14 +27,14 @@ class XGui:
 
     ## リポストに関する変数
     x_search_url = 'https://x.com/search?q=' # ポストの検索URL
-    x_post_button = './img/x_gui/post-button.png'  # Xのリポストボタンの画像(要チューニング)
-    x_post_simple_button = './img/x_gui/post-simple-button.png'  # Xのリポストボタンの画像(要チューニング)
-    x_repost_button = './img/x_gui/repost-button.png'  # Xのリポストボタンの画像(要チューニング)
-    x_repost_text = './img/x_gui/repost-text.png'  # リポストのテキストの画像(要チューニング)
-    x_quote_post_text = './img/x_gui/quote-repost-text.png' # 引用リポストのテキストの画像(要チューニング)
-    x_quote_repost_post_button = './img/x_gui/quote-repost-post-button.png' # 引用リポスト時の投稿ボタンの画像(要チューニング)
-    x_like_button_focus = './img/x_gui/like-button-focus.png' # 引用リポスト時の投稿ボタンの画像(要チューニング)
-    x_input_username = './img/x_gui/input_username.png' # ユーザー名入力テキストボックスの画像(要チューニング)
+    x_post_button = os.path.join(IMG_DIR, 'post-button.png')  # Xのリポストボタンの画像(要チューニング)
+    x_post_simple_button = os.path.join(IMG_DIR, 'simple-button.png')  # Xのリポストボタンの画像(要チューニング)
+    x_repost_button = os.path.join(IMG_DIR, 'repost-button.png')  # Xのリポストボタンの画像(要チューニング)
+    x_repost_text = os.path.join(IMG_DIR, 'repost-text.png')  # リポストのテキストの画像(要チューニング)
+    x_quote_post_text = os.path.join(IMG_DIR, 'quote-repost-text.png') # 引用リポストのテキストの画像(要チューニング)
+    x_quote_repost_post_button = os.path.join(IMG_DIR, 'quote-repost-post-button.png') # 引用リポスト時の投稿ボタンの画像(要チューニング)
+    x_like_button_focus = os.path.join(IMG_DIR, 'like-button-focus.png') # 引用リポスト時の投稿ボタンの画像(要チューニング)
+    x_input_username = os.path.join(IMG_DIR, 'input_username.png') # ユーザー名入力テキストボックスの画像(要チューニング)
     scroll_num = 2 # repost関数実行時に何回リポストをするか(要チューニング)
 
     ## いいねに関する変数

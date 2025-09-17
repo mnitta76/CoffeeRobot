@@ -17,9 +17,6 @@
                         <label id="responseTitle" class="responseTitleAreaChild mb-3 flex-md-row ">
                             {{ form.model_choice }}
                         </label>
-                        <label id="responseMode" class="responseTitleAreaChild mb-3 flex-md-row ">
-                            {{ form.response_mode }}
-                        </label>
                         <!-- 実際のファイル選択 input -->
                         <input type="file" id="pdfInput" accept="application/pdf" style="display: none;" />
                         <button id="uploadPdfButton" type="button" class="responseTitleAreaChildBtn btn btn-primary" {% if pdf_file_name != "" %}style="display: none;"{% endif %}>PDFアップロード</button>
@@ -27,6 +24,8 @@
                         <label id="pdfFileName" class="mb-3 flex-md-row" {% if pdf_file_name == "" %}style="display: none;"{% endif %}>
                             参照PDF：<span id="pdfFileNameText">{{ pdf_file_name }}</span>
                         </label>
+
+                        <div class="responseTitleAreaChildBtn btn btn-primary"><a href="/taskrunner/x/likefollows" class="text-white text-decoration-none">いいね実行</a></div>
                     </div>
 
                     {% csrf_token %}
