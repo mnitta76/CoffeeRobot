@@ -135,17 +135,16 @@ class XGui:
                 pag.hotkey('ctrl', "l")
                 sleep(self.wait_time)
 
-                print('☆１')
-
                 pyperclip.copy(self.x_login_url)
                 pag.hotkey("ctrl", "v")
                 sleep(self.wait_time)
                 pag.press("enter")
                 sleep(self.wait_time)
-                print('☆２')
-                p= pag.locateOnScreen(self.x_input_username, confidence=0.8)
+
+                kwargs = dict(confidence=0.8, grayscale=True)
+                p= pag.locateOnScreen(self.x_input_username, **kwargs)
+                sleep(self.wait_time)
                 if p is not None:
-                    print('☆３')
                     # ユーザー名をクリック
                     x, y = pag.center(p)
                     pag.click(x, y)
@@ -185,7 +184,6 @@ class XGui:
                     pag.press("enter")
                     sleep(self.wait_time)
             else:
-                print('☆４')
                 pag.hotkey('ctrl', "w")
 
         except Exception as e:
