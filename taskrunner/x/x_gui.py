@@ -14,7 +14,7 @@ IMG_DIR = os.path.join(BASE_DIR, 'img', 'x_gui')
 
 class XGui:
     ## 共通定数
-    wait_time = 5 #キーボード入力やマウス操作後の待機秒数
+    wait_time = 7 #キーボード入力やマウス操作後の待機秒数
     chrome_path = r'chrome.exe' #Chromeの起動コマンド
 
     ## ログインに関する変数
