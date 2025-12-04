@@ -21,6 +21,7 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from blog.views import get_popular_posts, get_post_stats, trigger_blog_generation
 from common.file_utils import upload_file_to_local, delete_file_from_local, delete_folder_from_local
 from chat.forms import ChatForm
 from chat.models import ChatMessage
@@ -63,6 +64,40 @@ def chat(request):
         form = ChatForm(request.POST)
         if form.is_valid():
             user_message = form.cleaned_data["message"]
+
+            # ▼▼▼ ここからブログコマンド対応 ▼▼▼
+            # /blog-top
+            if user_message.startswith("/blog-top"):
+                rows = get_popular_posts(days=7)
+                reply = "\n".join(
+                    [f"{i + 1}位: {r['slug']}（{r['count']}ビュー）" for i, r in enumerate(rows)]
+                ) if rows else "直近7日間の閲覧データがありません。"
+
+                ChatMessage.objects.create(user=request.user, role='assistant', content=reply,
+                                           response_mode=response_mode)
+                return redirect(f"{request.path}?model_choice={selected_model}&response_mode={response_mode}")
+
+            # /blog-stats <slug>
+            if user_message.startswith("/blog-stats "):
+                slug = user_message[len("/blog-stats "):].strip()
+                c7 = get_post_stats(slug, days=7)
+                c30 = get_post_stats(slug, days=30)
+                reply = f"記事 `{slug}` の閲覧数:\n- 直近7日: {c7}\n- 直近30日: {c30}"
+
+                ChatMessage.objects.create(user=request.user, role='assistant', content=reply,
+                                           response_mode=response_mode)
+                return redirect(f"{request.path}?model_choice={selected_model}&response_mode={response_mode}")
+
+            # /blog "テーマ"
+            if user_message.startswith("/blog "):
+                topic = user_message[len("/blog "):].strip().strip('"')
+                reply = trigger_blog_generation(topic)
+
+                ChatMessage.objects.create(user=request.user, role='assistant', content=reply,
+                                           response_mode=response_mode)
+                return redirect(f"{request.path}?model_choice={selected_model}&response_mode={response_mode}")
+            # ▲▲▲ ここまでブログコマンド対応 ▲▲▲
+
             selected_model = request.POST.get("model_choice") or "gpt-3.5-turbo"
             response_mode = request.POST.get("response_mode") or 'chroma'
             retriever = get_retriever(response_mode)

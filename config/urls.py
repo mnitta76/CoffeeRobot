@@ -11,6 +11,7 @@ urlpatterns = [
     path('', redirect_to_login, name='root_redirect'),
     path('accounts/', include('accounts.urls')),
     path('admin/', admin.site.urls),
+    path('blog/', include("blog.urls")),
     path('chat/', include('chat.urls')),
     path('coffeenotes/', include('coffeenotes.urls')),
     path('taskrunner/', include('taskrunner.urls')),

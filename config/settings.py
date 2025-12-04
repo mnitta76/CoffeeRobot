@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'coffeenotes.apps.CoffeenotesConfig',
     'accounts.apps.AccountsConfig',
+    'blog.apps.BlogConfig',
     'chat.apps.ChatConfig',
     'taskrunner.apps.TaskrunnerConfig',
     'shop.apps.ShopConfig',
@@ -156,3 +157,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # 開発中は http 想定なので False（本番は True にする）
 CSRF_COOKIE_SECURE = env.bool("CSRF_COOKIE_SECURE", default=not DEBUG)
 SESSION_COOKIE_SECURE = env.bool("SESSION_COOKIE_SECURE", default=not DEBUG)
+
+GITHUB_OWNER = "mnitta76"
+GITHUB_REPO = "coffeerobot-web"
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")

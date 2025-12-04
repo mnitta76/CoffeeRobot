@@ -29,7 +29,7 @@ def likeFollws_to_x(request):
     try:
         gc = get_accountlist_from_spreadsheet()
         for index, record in enumerate(gc):
-            x_obj = XGui(3, record.get('x_username'), record.get('x_password'))
+            x_obj = XGui(5, record.get('x_username'), record.get('x_password'))
             result = x_obj.likeFollows()
             return JsonResponse({'status': 'success', 'code': result})
 
