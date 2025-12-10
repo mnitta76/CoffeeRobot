@@ -67,7 +67,7 @@
         }, 100);  // 100ms 後にスクロール
 
         // モード変更処理
-        document.getElementById("id_response_mode").addEventListener("change", async function () {
+        document.getElementById("id_model_choice").addEventListener("change", async function () {
             // セレクトボックスから現在のmodel_choiceを取得
             const modelSelect = document.querySelector('select[name="model_choice"]');
             const currentModel = modelSelect ? modelSelect.value : "chroma";
