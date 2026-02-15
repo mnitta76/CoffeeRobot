@@ -3,6 +3,12 @@
 import os
 import sys
 
+import warnings
+
+# Suppress all warnings from langchain
+warnings.filterwarnings("ignore", module="langchain")
+# Also specifically for the class if possible, but module should cover it.
+
 
 def main():
     """Run administrative tasks."""

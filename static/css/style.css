@@ -1,5 +1,20 @@
 @charset "utf-8";
 
+:root {
+    --coffee-espresso: #1c0f0a;
+    --coffee-caramel: #6a3b28;
+    --coffee-foam: #f2e3d5;
+    --coffee-cream: #f9f4ee;
+    --coffee-mint: #9ef0d5;
+    --coffee-amber: #ffb267;
+    --coffee-shadow: rgba(21, 8, 4, 0.45);
+    --coffee-glass: rgba(255, 255, 255, 0.08);
+    --coffee-border: rgba(255, 255, 255, 0.2);
+    --coffee-text: #20100a;
+    --coffee-muted: #8c6f5c;
+    --coffee-gradient: radial-gradient(circle at top left, rgba(255, 245, 235, 0.3), transparent 40%), radial-gradient(circle at 20% 20%, rgba(158, 240, 213, 0.15), transparent 50%), linear-gradient(135deg, #120807 0%, #2c150d 45%, #3d1c11 100%);
+}
+
 /* base */
 * {
   margin: 0;
@@ -12,12 +27,28 @@ html, body {
   padding: 0;
 }
 
+body {
+    font-family: "Segoe UI", "Noto Sans JP", sans-serif;
+    background: var(--coffee-gradient);
+    color: var(--coffee-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 body.sidebar-open {
     overflow: hidden;
 }
 
 main {
+    flex: 1;
+    display: flex;
+}
 
+main > .container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .welcome {
@@ -112,39 +143,262 @@ main {
 }
 
 /* chat */
-/* チャット画面を縦に構成 */
 .chat-app {
-  display: flex;
-  flex-direction: column;
+    position: relative;
+    padding-bottom: 0;
+    min-height: calc(100vh - 20px);
 }
 
-/* メイン部分が伸縮して対応 */
-.chat-main-container {
-  height: 88vh;
-}
-
-.chat-content {
-    display: block;
-    height: 88vh; /* 画面高に応じて親の高さを調整 */
-}
-
-.responseTitleArea {
+.coffee-scene {
     display: flex;
-    flex-wrap: nowrap;          /* 折り返さないようにする（必要なら wrap に変更） */
+    flex-direction: column;
+    flex: 1;
+    min-height: inherit;
+}
+
+.coffee-atmosphere {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: min(100%, 100vh);
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.steam-line {
+    position: absolute;
+    width: 2px;
+    height: 120px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), transparent);
+    animation: steamRise 6s linear infinite;
+    filter: blur(0.5px);
+}
+
+.steam-1 { left: 20%; top: 10%; animation-delay: 0s; }
+.steam-2 { left: 60%; top: 5%; animation-delay: 1.2s; }
+.steam-3 { left: 80%; top: 15%; animation-delay: 2.5s; }
+
+.bean {
+    position: absolute;
+    width: 18px;
+    height: 28px;
+    border-radius: 50% 50% 40% 40%;
+    background: radial-gradient(circle at 30% 30%, #cc8c5c, #5a301d 70%);
+    opacity: 0.6;
+    transform: rotate(-20deg);
+}
+
+.bean-1 { right: 10%; top: 30%; animation: orbit 18s linear infinite; }
+.bean-2 { left: 5%; bottom: 20%; animation: orbit 24s linear infinite reverse; }
+
+.chat-main-container {
+    position: relative;
+    z-index: 1;
+    min-height: calc(100vh - 40px);
+    display: flex;
+    flex: 1;
+}
+
+.coffee-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-items: stretch;
+    flex: 1;
+}
+
+@media (min-width: 992px) {
+    .coffee-grid {
+        grid-template-columns: minmax(240px, 0.65fr) minmax(520px, 1.35fr);
+    }
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--coffee-border);
+    border-radius: 24px;
+    padding: 1.75rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(18px);
+    position: relative;
+}
+
+.coffee-hero {
+    color: var(--coffee-foam);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.hero-eyebrow {
+    letter-spacing: 0.2em;
+    font-size: 0.85rem;
+    color: var(--coffee-mint);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.hero-title {
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.hero-copy {
+    line-height: 1.8;
+    color: var(--coffee-cream);
+    margin-bottom: 1rem;
+    font-size: 13px;
+}
+
+.text-highlight {
+    color: var(--coffee-amber);
+    font-weight: 600;
+}
+
+.hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.coffee-pill {
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    color: var(--coffee-foam);
+    backdrop-filter: blur(8px);
+}
+
+.hero-points {
+    list-style: none;
+    margin-bottom: 1.25rem;
+    color: var(--coffee-foam);
+    opacity: 0.9;
+}
+
+.hero-points li {
+    padding-left: 1.2rem;
+    position: relative;
+    margin-bottom: 0.4rem;
+}
+
+.hero-points li::before {
+    content: "*";
+    position: absolute;
+    left: 0;
+    color: var(--coffee-amber);
+}
+
+.hero-cta .cta-note {
+    font-size: 0.85rem;
+    color: var(--coffee-muted);
+}
+
+.chat-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: rgba(22, 12, 8, 0.75);
+    height: 100%;
+}
+
+.chat-panel form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.control-stack {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 18px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.control-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(0.35rem, 1vw, 0.9rem) clamp(0.5rem, 1.5vw, 1rem);
+    align-items: flex-end;
+}
+
+.primary-control {
     align-items: center;
-    gap: 0.5rem;                 /* 要素間の余白 */
-    flex-direction: row;
-    overflow-x: auto;
- }
+    flex-wrap: wrap;
+}
+
+.model-mode-pair {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: clamp(0.3rem, 0.8vw, 0.8rem);
+    flex: 0 1 auto;
+    min-width: 0;
+}
+
+.control-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 180px;
+    flex: 1 1 180px;
+    height: auto;
+}
+
+.control-block.slim {
+    min-width: 120px;
+    flex: 0 1 clamp(140px, 18vw, 220px);
+}
+
+.control-block.pdf-block {
+    flex: 1.6 1 clamp(220px, 30vw, 380px);
+    height: auto;
+}
+
+.control-block.action-block {
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0.5rem;
+    height: auto;
+}
+
+.pill-select .responseTitleAreaChild {
+    width: 100%;
+}
+
+.pdf-inline {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.6rem;
+    align-items: center;
+    flex: 0 0 auto;
+    width: 100%;
+}
+
+.control-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    color: var(--coffee-muted);
+    text-transform: uppercase;
+}
 
 .responseTitleAreaChild {
     display: inline-flex;
     align-items: center;
     position: relative;
-    border-bottom: 1px solid gray;
-    margin-right: 5px;
-    flex-shrink: 1;             /* はみ出す時は縮む（必要なら） */
-    white-space: nowrap;
+    border: none;
+    border-radius: 999px;
+    padding: 0;
+    background: transparent;
 }
 
 .responseTitleAreaChild::after {
@@ -152,7 +406,7 @@ main {
     right: 15px;
     width: 10px;
     height: 7px;
-    background-color: #535353;
+    background-color: transparent;
     clip-path: polygon(0 0, 100% 0, 50% 100%);
     content: '';
     pointer-events: none;
@@ -160,117 +414,219 @@ main {
 
 .responseTitleAreaChild select {
     appearance: none;
-    height: 2.8em;
-    padding: .4em calc(.8em + 30px) .4em .8em;
-    border: none;
-    border-bottom: 2px solid #ffffff;
-    background-color: #fff;
-    color: #333333;
-    font-size: 1em;
-    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(34, 17, 11, 0.9);
+    color: var(--coffee-foam);
+    font-size: 0.95rem;
+    padding: 0.4rem 2rem 0.4rem 1rem;
+    border-radius: 999px;
+    min-width: 120px;
 }
 
 .responseTitleAreaChild select:focus {
     outline: none;
+    border-color: var(--coffee-amber);
+}
+
+.responseTitleAreaChild select option {
+    background: rgba(34, 17, 11, 0.95);
+    color: var(--coffee-foam);
+}
+
+.bean-btn {
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    padding: 0.55rem 1.2rem;
+    color: var(--coffee-foam);
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02));
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bean-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+    color: var(--coffee-foam);
+}
+
+.hollow-link {
+    min-width: 140px;
+}
+
+.pdf-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--coffee-foam);
+    font-size: 0.85rem;
+    flex: 1 1 clamp(200px, 28vw, 360px);
+    min-width: 200px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pdf-chip span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
 }
 
 /* スクロールエリア（会話表示エリア） */
 .responsearea {
-  height: 70%;
-  box-sizing: border-box;  /* padding込みのサイズ計算 */
+  flex: 1;
+  min-height: 320px;
+  height: auto;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 18px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 0.5rem;
 }
 
 .responsearea .responseText {
-  color:black;
-  font-family: Helvetica, Arial, sans-serif;
+  color: var(--coffee-foam);
   font-weight:500;
-  font-size: 16px;
-  border-radius: 5px;
-  line-height: 22px;
+  font-size: 15px;
+  border-radius: 12px;
+  line-height: 1.6;
   background-color: transparent;
   transition: all 0.3s;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  width: 95%;
+  margin: 0;
+  width: 100%;
   box-sizing: border-box;
   outline:0;
   display: block;
-  overflow: auto;
-  padding: 0 5% 0 0;
   overflow-y: auto;
   height: 100%;
+  padding-right: 0.5rem;
 }
 
 .message {
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
+  position: relative;
 }
 
 .message.user {
   flex-direction: row-reverse;
-  background: none; /* 背景はspanの方に持たせる */
 }
 
 .message.assistant {
   color: #222;
 }
 
+.message::before {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.08);
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.message:hover::before {
+    opacity: 1;
+}
+
 .message-text {
   display: inline-block;
-  padding: 0.5em 1em;
-  border-radius: 20px;
+  padding: 0.8em 1.1em;
+  border-radius: 18px 18px 4px 18px;
   max-width: 85%;
   word-break: break-word;
   white-space: pre-line;
-}
-.message.user .message-text {
-  background: lightgray; /* 背景はspanの方に持たせる */
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05);
+  color: var(--coffee-foam);
 }
 
-/* 入力フォームを画面下に固定 */
+.message.user .message-text {
+  background: linear-gradient(135deg, #f0d9c7, #c08c65);
+  color: #2b1107;
+  border-radius: 18px 4px 18px 18px;
+}
+
+/* 入力フォーム */
 .searchform {
   margin-top: auto;
+  flex-shrink: 0;
+  padding-bottom: 0.75rem;
 }
 
-.searchform textarea {
-  flex: 1; /* 可変幅にする */
-  min-width: 0; /* flexbox で要素を収めるために必要 */
-  color: black;
-  font-family: Helvetica, Arial, sans-serif;
+.coffee-input textarea {
+  flex: 1;
+  min-width: 0;
+  color: var(--coffee-foam);
+  font-family: "Segoe UI", "Noto Sans JP", sans-serif;
   font-weight: 500;
-  font-size: 18px;
-  border-radius: 5px;
-  line-height: normal;
-  background-color: transparent;
-  border: 2px solid gray;
-  transition: all 0.3s;
-  padding: 0.5em 1em;
+  font-size: 16px;
+  border-radius: 18px;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  transition: border 0.3s, box-shadow 0.3s;
+  padding: 0.8em 1.2em;
   box-sizing: border-box;
   outline: 0;
-  height: 25%;
 }
 
-.searchform button {
-  padding: 1em;
-  height: 50px; /* 高さを統一 */
+.coffee-input textarea:focus {
+    border-color: var(--coffee-mint) !important;
+    box-shadow: 0 0 0 2px rgba(158, 240, 213, 0.3);
 }
 
-.searchform #submitButton {
+.coffee-input .form-control {
+    background-color: transparent;
+    color: var(--coffee-foam);
+    border: none;
 }
 
-.searchform #clearButton {
-  background-color: gray;
-  color: white;
+.coffee-input .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
 }
 
-.searchform button:hover {
-  color: #1A60BF;
-  background-color: #D0E2FB;
+.btn-steam {
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 0.75rem 1.4rem;
+    border-radius: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    background: transparent;
+    color: var(--coffee-foam);
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.btn-steam.primary {
+    background: linear-gradient(135deg, #f4d0a8, #df9a65);
+    color: #2a1109;
+    border: none;
+}
+
+.btn-steam.secondary {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-steam:hover {
+    transform: translateY(-1px);
 }
 
 .searchform .form-control.is-valid {
     box-shadow: none !important;
-    border-color: gray !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
     background-image: none !important;
 }
 
@@ -278,23 +634,70 @@ main {
     margin-bottom: 0 !important;
 }
 
+@keyframes steamRise {
+    0% { transform: translateY(40px); opacity: 0; }
+    20% { opacity: 0.6; }
+    80% { opacity: 0.2; }
+    100% { transform: translateY(-120px); opacity: 0; }
+}
+
+@keyframes orbit {
+    0% { transform: translate(0, 0) rotate(-20deg); }
+    50% { transform: translate(30px, -20px) rotate(-10deg); }
+    100% { transform: translate(0, 0) rotate(-20deg); }
+}
+
 @media (min-width: 768px) {
-  #submitButton,
-  #clearButton {
-    min-width: 90px;  /* ここを好みに応じて調整可能 */
-  }
+    .btn-steam {
+        min-width: 140px;
+    }
+}
+
+@media (max-height: 900px) {
+    .chat-main-container {
+        min-height: calc(100vh - 110px);
+        display: flex;
+        align-items: stretch;
+    }
+
+    .coffee-grid {
+        max-height: calc(100vh - 130px);
+        grid-auto-rows: minmax(0, 1fr);
+        align-items: stretch;
+    }
+
+    .coffee-grid > * {
+        min-height: 0;
+        height: 100%;
+    }
+
+    .coffee-hero {
+        height: 100%;
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+    .chat-panel {
+        height: 100%;
+        min-height: 0;
+        overflow-y: auto;
+    }
+
+    .chat-panel form {
+        height: 100%;
+    }
+
+    .responsearea {
+        min-height: 150px;
+        flex-shrink: 0;
+    }
 }
 
 @media (max-width: 768px) {
-/* base */
-    main {
-
-    }
-
     .welcome {
-        padding: 2rem 1rem; /* 左右の余白を追加しつつ、上下は少し縮める */
+        padding: 2rem 1rem;
         margin-bottom: 1.5rem;
-        text-align: center; /* 中央寄せ */
+        text-align: center;
     }
 
     .container {
@@ -302,8 +705,13 @@ main {
         padding-right: 1rem;
     }
 
+    .coffee-grid {
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+    }
+
     #sidebar {
-        width: 80%; /* デフォルト250pxより画面幅に合わせる */
+        width: 80%;
         left: -80%;
         padding-top: 4rem;
     }
@@ -324,7 +732,7 @@ main {
 
     #sidebar .sidebar-item {
         font-size: 1.1rem;
-        padding: 14px 24px; /* タップしやすく */
+        padding: 14px 24px;
     }
 
     .navbar-brand {
@@ -339,36 +747,101 @@ main {
         padding: 0.4rem 0.6rem;
     }
 
-/* chat */
-
-    .responseTitleAreaChild {
-        font-size: small;: 60%;
+    .coffee-hero {
+        height: auto;
+        max-height: 55vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-right: 0.25rem;
+        flex: 0 0 auto;
     }
 
-    .responseTitleAreaChildBtn {
-        font-size: small;: 60%;
+    .chat-panel {
+        flex: 1 1 auto;
+        min-height: 45vh;
+        max-height: none;
+        overflow-y: auto;
+    }
+
+    .control-row {
+        flex-direction: column;
+    }
+
+    .control-row.primary-control {
+        flex-direction: column;
+    }
+
+    .model-mode-pair {
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .control-block.slim {
+        width: 100%;
+    }
+
+    .control-block.pdf-block {
+        flex: 0 0 auto;
+        align-self: stretch;
+    }
+
+    .pdf-inline {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
+    .control-block,
+    .control-block.action-block {
+        width: 100%;
+        margin-left: 0;
+        flex: 0 0 auto;
+    }
+
+    .pdf-inline {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.4rem;
+    }
+
+    .pdf-inline .bean-btn,
+    .pdf-inline .pdf-chip {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .control-block.pdf-block {
+        margin-bottom: 0.2rem;
+    }
+
+    .control-block.action-block {
+        gap: 0.15rem;
+        margin-bottom: 0;
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    .control-block.action-block {
+        width: 100%;
     }
 
     .responsearea {
-        height: 60%;
+        height: auto;
+        min-height: 320px;
     }
 
-    .searchform {
-        top: 60%;
-        flex-direction: column; /* スマホ時は縦並び */
-        align-items: stretch; /* フル幅にする */
+    .coffee-input .row {
+        flex-direction: column;
     }
 
-    .searchform textarea {
-        width: 100%; /* スマホ時は幅を100%に */
+    .btn-steam {
+        width: 100%;
     }
+}
 
-    .searchform button {
-        width: 100%; /* ボタンもフル幅 */
+@media (max-width: 640px) {
+    .model-mode-pair {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0.2rem;
     }
-    .searchform .row {
-        flex-direction: column; /* モバイルでは縦並び */
-        align-items: stretch; /* 各要素の幅を揃える */
-    }
-
 }

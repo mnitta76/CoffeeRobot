@@ -2,33 +2,71 @@
 {% load static %}
 {% load django_bootstrap5 %}
 
-    {% block extraheader %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    {% endblock %}
+{% block extraheader %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
 
 {% block main %}
-<div class="chat-app mt-3">
-    <main class="main chat-main-container">
-        <div class="col-md-9 col-12 mx-auto">
-            <form method="POST" id="chat-form">
-                {% csrf_token %}
-                <div class="chat-content">
-                    <div class="responseTitleArea">
-                        <label id="responseTitle" class="responseTitleAreaChild mb-3 flex-md-row ">
-                            {{ form.model_choice }}
-                        </label>
-                        <!-- 実際のファイル選択 input -->
-                        <input type="file" id="pdfInput" accept="application/pdf" style="display: none;" />
-                        <button id="uploadPdfButton" type="button" class="responseTitleAreaChildBtn btn btn-primary" {% if pdf_file_name != "" %}style="display: none;"{% endif %}>PDFアップロード</button>
+<div class="chat-app coffee-scene mt-3">
+    <div class="coffee-atmosphere" aria-hidden="true">
+        <span class="steam-line steam-1"></span>
+        <span class="steam-line steam-2"></span>
+        <span class="steam-line steam-3"></span>
+        <span class="bean orbit bean-1"></span>
+        <span class="bean orbit bean-2"></span>
+    </div>
+    <main class="main chat-main-container container-fluid px-md-4">
+        <div class="coffee-grid">
+            <section class="coffee-hero glass-card">
+                <h1 class="hero-title">COFFEE ROBOT Terminal</h1>
+                <p class="hero-copy">
+                    /blog-top　　　 ：　直近7日間の閲覧データ<br>
+                    /blog-stats "slug"：　slug（記事のURL） の閲覧数<br>
+                    /blog "テーマ"　 ：　"テーマ"をもとにしたblogの作成<br>
+                </p>
+                
+            </section>
 
-                        <label id="pdfFileName" class="mb-3 flex-md-row" {% if pdf_file_name == "" %}style="display: none;"{% endif %}>
-                            参照PDF：<span id="pdfFileNameText">{{ pdf_file_name }}</span>
-                        </label>
+            <section class="chat-panel glass-card">
+                <form method="POST" id="chat-form">
+                    {% csrf_token %}
+                    <div class="control-stack">
+                        <div class="control-row primary-control">
+                            <div class="model-mode-pair">
+                                <div class="control-block pill-select slim">
+                                    <span class="control-label">モデル</span>
+                                    <div class="responseTitleAreaChild mb-3">
+                                        {{ form.model_choice }}
+                                    </div>
+                                </div>
 
-                        <div class="responseTitleAreaChildBtn btn btn-primary"><a href="/taskrunner/x/likefollows" class="text-white text-decoration-none">いいね実行</a></div>
+                                <div class="control-block pill-select slim">
+                                    <span class="control-label">モード</span>
+                                    <div class="responseTitleAreaChild mb-3">
+                                        {{ form.response_mode }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="control-block pdf-block mb-3">
+                                <span class="control-label">参照PDF</span>
+                                <div class="pdf-inline">
+                                    <input type="file" id="pdfInput" accept="application/pdf" style="display: none;" />
+                                    <button id="uploadPdfButton" type="button" class="responseTitleAreaChildBtn bean-btn" {% if pdf_file_name != "" %}style="display: none;"{% endif %}>
+                                        PDFアップロード
+                                    </button>
+                                    <label id="pdfFileName" class="pdf-chip" {% if pdf_file_name == "" %}style="display: none;"{% endif %}>
+                                        参照PDF：<span id="pdfFileNameText">{{ pdf_file_name }}</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="control-block action-block">
+                                <a href="/taskrunner/x/likefollows" class="bean-btn hollow-link like-action-btn">いいね実行</a>
+                            </div>
+                        </div>
                     </div>
 
-                    {% csrf_token %}
                     <div class="responsearea mb-3">
                         <ul id="responseText" class="responseText">
                             {% for msg in messages %}
@@ -39,21 +77,19 @@
                         </ul>
                     </div>
 
-                    <div class="searchform">
-                        <div class="row g-2 align-items-center">
+                    <div class="searchform coffee-input">
+                        <div class="row g-3 align-items-stretch">
                             <div class="col-12 col-md">
                                 {% bootstrap_field form.message show_label=False wrapper_class="custom-wrapper" %}
                             </div>
-
-                            <div class="col-12 col-md-auto d-flex justify-content-between gap-2">
-                                <button id="submitButton" type="submit" class="btn btn-primary">送信</button>
-                                <button id="clearButton" type="button" class="btn btn-secondary">クリア</button>
+                            <div class="col-12 col-md-auto d-flex flex-md-column flex-row gap-2">
+                                <button id="submitButton" type="submit" class="btn-steam primary">送信</button>
+                                <button id="clearButton" type="button" class="btn-steam secondary">クリア</button>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
-
+                </form>
+            </section>
         </div>
     </main>
 </div>

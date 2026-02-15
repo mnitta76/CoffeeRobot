@@ -5,10 +5,10 @@ import openai
 from pathlib import Path
 import requests
 
-from langchain.document_loaders import PyPDFLoader
-from langchain.vectorstores import Chroma, FAISS, Pinecone
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.chat_models import ChatOpenAI
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.vectorstores import Chroma, FAISS, Pinecone
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
 from langchain.chains import ConversationalRetrievalChain
 from langchain.text_splitter import CharacterTextSplitter
